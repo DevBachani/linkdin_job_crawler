@@ -5,6 +5,8 @@ import schedule
 from crawler import fetch_jobs
 from telegram_notifire import send_telegram_message
 from config import KEYWORDS, LOCATIONS, MAX_JOBS
+import threading
+from http.server import SimpleHTTPRequestHandler, HTTPServer
 
 SEEN_FILE = "jobs.json"
 
@@ -80,6 +82,12 @@ def check_new_jobs():
 
     print("🕒 Next check in 5 minutes...\n")
 
+def keep_alive():
+    server = HTTPServer(("0.0.0.0", 10000), SimpleHTTPRequestHandler)
+    print("🌐 Dummy server running on port 10000 for Render")
+    server.serve_forever()
+
+threading.Thread(target=keep_alive, daemon=True).start()
 
 # -------------------------------------------
 # Schedule job every 15 minutes
