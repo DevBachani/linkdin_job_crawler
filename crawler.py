@@ -1,12 +1,21 @@
-
-
+import os
 import subprocess
 
-# ✅ Ensure Playwright Chromium is installed before launching
+# ✅ Set a custom Playwright cache path (Render allows /opt/render/project/src/.cache)
+os.environ["PLAYWRIGHT_BROWSERS_PATH"] = "/opt/render/project/src/.cache/ms-playwright"
+
+# ✅ Ensure Chromium is installed into that path
 try:
-    subprocess.run(["python", "-m", "playwright", "install", "chromium"], check=True)
+    print("🔧 Installing Playwright Chromium in Render-compatible path...")
+    subprocess.run(
+        ["python", "-m", "playwright", "install", "chromium"],
+        check=True,
+        env=os.environ
+    )
 except Exception as e:
-    print("⚠️ Browser install failed or already installed:", e)
+    print("⚠️ Browser installation skipped or failed:", e)
+
+    
 from playwright.sync_api import sync_playwright
 
 def fetch_jobs(keywords, locations, max_jobs=20):
