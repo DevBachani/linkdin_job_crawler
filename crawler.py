@@ -1,3 +1,12 @@
+
+
+import subprocess
+
+# ✅ Ensure Playwright Chromium is installed before launching
+try:
+    subprocess.run(["python", "-m", "playwright", "install", "chromium"], check=True)
+except Exception as e:
+    print("⚠️ Browser install failed or already installed:", e)
 from playwright.sync_api import sync_playwright
 
 def fetch_jobs(keywords, locations, max_jobs=20):
