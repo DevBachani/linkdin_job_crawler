@@ -1,0 +1,10 @@
+# Ignore virtual environment folders
+myenv/
+venv/
+.env
+__pycache__/
+*.pyc
+jobs.json
+
+# Ignore Playwright browser cache
+playwright/.local-browsers/
