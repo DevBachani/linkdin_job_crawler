@@ -8,6 +8,27 @@ from config import KEYWORDS, LOCATIONS, MAX_JOBS
 import threading
 from http.server import SimpleHTTPRequestHandler, HTTPServer
 
+
+import threading
+from http.server import BaseHTTPRequestHandler, HTTPServer
+
+class HealthHandler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        self.send_response(200)
+        self.send_header("Content-type", "text/plain")
+        self.end_headers()
+        self.wfile.write("✅ LinkedIn Job Notifier is alive and running on Render!")
+        return
+
+def keep_alive():
+    server = HTTPServer(("0.0.0.0", 10000), HealthHandler)
+    print("🌐 Health check server running on port 10000 for Render")
+    server.serve_forever()
+
+# Start server thread
+threading.Thread(target=keep_alive, daemon=True).start()
+
+
 SEEN_FILE = "jobs.json"
 
 # -------------------------------------------
@@ -90,9 +111,9 @@ def keep_alive():
 threading.Thread(target=keep_alive, daemon=True).start()
 
 # -------------------------------------------
-# Schedule job every 15 minutes
+# Schedule job every 5 minutes
 # -------------------------------------------
-schedule.every(15).minutes.do(check_new_jobs)
+schedule.every(5).minutes.do(check_new_jobs)
 
 print("🤖 LinkedIn Job Notifier is running...")
 
