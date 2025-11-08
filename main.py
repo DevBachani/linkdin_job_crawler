@@ -6,19 +6,23 @@ from crawler import fetch_jobs
 from telegram_notifire import send_telegram_message
 from config import KEYWORDS, LOCATIONS, MAX_JOBS
 import threading
-from http.server import SimpleHTTPRequestHandler, HTTPServer
+from http.server import SimpleHTTPRequestHandler
 
 
 import threading
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
 class HealthHandler(BaseHTTPRequestHandler):
+    def do_HEAD(self):
+        self.send_response(200)
+        self.end_headers()
+
     def do_GET(self):
+        message = "✅ LinkedIn Job Notifier is alive and running on Render!"
         self.send_response(200)
         self.send_header("Content-type", "text/plain")
         self.end_headers()
-        self.wfile.write("✅ LinkedIn Job Notifier is alive and running on Render!")
-        return
+        self.wfile.write(message.encode("utf-8"))  # <-- FIXED (encode to bytes)
 
 def keep_alive():
     server = HTTPServer(("0.0.0.0", 10000), HealthHandler)
@@ -27,6 +31,7 @@ def keep_alive():
 
 # Start server thread
 threading.Thread(target=keep_alive, daemon=True).start()
+
 
 
 SEEN_FILE = "jobs.json"
