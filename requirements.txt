@@ -1,4 +1,6 @@
 playwright
+schedule
+redis
+upstash-redis
 requests
 python-dotenv
-schedule
